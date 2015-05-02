@@ -1,0 +1,10 @@
+route set home = {
+	waypoint takeoff;
+	waypoint flyto 123.121 11.99 32.99;
+	waypoint flyto 91.21 11.232 32.22;
+	waypoint loiter 32.98;
+	waypoint flyto 9999.12 11.2121 32.21;
+	waypoint land;
+}
+
+exec route home;
