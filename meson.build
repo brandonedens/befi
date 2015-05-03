@@ -16,4 +16,8 @@ arguments : ['@INPUT@', '--defines=@OUTPUT1@', '--output=@OUTPUT0@'])
 
 pfiles = pgen.process('befi.y')
 
-executable('befi', sources : [['drone.c', 'main.c'], lfiles, pfiles])
+dep_math = find_library('m')
+dep_pthread = find_library('pthread')
+
+executable('befi', sources : [['drone.c', 'main.c'], lfiles, pfiles],
+    dependencies: [dep_math, dep_pthread])

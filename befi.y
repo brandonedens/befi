@@ -7,12 +7,17 @@
 /*******************************************************************************
  * Include Files
  */
+#include <stdbool.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "drone.h"
 
 /*******************************************************************************
- * Local Variables
+ * Global Variables
  */
+
+extern bool shutdown;
 
 /*******************************************************************************
  * Local Functions
@@ -23,7 +28,7 @@
 
 %}
 
-%token TOKEN_ALT TOKEN_COORD TOKEN_EXEC TOKEN_FLYTO TOKEN_LAND TOKEN_LOITER TOKEN_REMOVE TOKEN_ROUTE TOKEN_SET TOKEN_TAKEOFF TOKEN_WAYPOINT
+%token TOKEN_ALT TOKEN_COORD TOKEN_EXEC TOKEN_EXIT TOKEN_FLYTO TOKEN_LAND TOKEN_LOITER TOKEN_REMOVE TOKEN_ROUTE TOKEN_SET TOKEN_SLEEP TOKEN_TAKEOFF TOKEN_WAYPOINT
 
 %union {
 	int    number;
@@ -43,17 +48,23 @@ statements:
 
 statement: route
 		 | exec
+		 | exit
+		 | sleep
 		 ;
-
-route: TOKEN_ROUTE TOKEN_SET IDENTIFIER { drone_route_add(drone_default(), $3); } '=' '{' waypoints '}'
-	 | TOKEN_ROUTE TOKEN_REMOVE IDENTIFIER ';' { drone_route_remove(drone_default(), $3); }
-	 ;
 
 exec: TOKEN_EXEC TOKEN_ROUTE IDENTIFIER ';' { drone_exec_route(drone_default(), $3); }
     | TOKEN_EXEC TOKEN_FLYTO TOKEN_ALT DECIMAL ';'
     | TOKEN_EXEC TOKEN_FLYTO TOKEN_COORD DECIMAL DECIMAL ';'
     | TOKEN_EXEC TOKEN_FLYTO TOKEN_COORD DECIMAL DECIMAL DECIMAL ';'
     ;
+
+exit: TOKEN_EXIT ';' { exit(0); /* XXX This is not graceful. */ }
+
+route: TOKEN_ROUTE TOKEN_SET IDENTIFIER { drone_route_add(drone_default(), $3); } '=' '{' waypoints '}'
+	 | TOKEN_ROUTE TOKEN_REMOVE IDENTIFIER ';' { drone_route_remove(drone_default(), $3); }
+	 ;
+
+sleep: TOKEN_SLEEP NUMBER ';' { sleep($2); }
 
 waypoints:
 		 | waypoints waypoint

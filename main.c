@@ -44,6 +44,8 @@
  * Local Variables
  */
 
+bool shutdown;
+
 /*******************************************************************************
  * Global Variable Definitions
  */
@@ -59,6 +61,11 @@ int main(int argc, char *argv[])
 	(void)argc;
 	(void)argv;
 
-	yyparse();
+	while (!shutdown) {
+		printf("befi $ ");
+		yyparse();
+		printf("\n");
+	}
+
 	return EXIT_SUCCESS;
 }

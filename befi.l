@@ -24,12 +24,14 @@ void yyerror(char *s)
 alt                     return TOKEN_ALT;
 coord                   return TOKEN_COORD;
 exec                    return TOKEN_EXEC;
+exit                    return TOKEN_EXIT;
 flyto                   return TOKEN_FLYTO;
 land                    return TOKEN_LAND;
 loiter                  return TOKEN_LOITER;
 remove                  return TOKEN_REMOVE;
 route                   return TOKEN_ROUTE;
 set                     return TOKEN_SET;
+sleep                   return TOKEN_SLEEP;
 takeoff                 return TOKEN_TAKEOFF;
 waypoint                return TOKEN_WAYPOINT;
 

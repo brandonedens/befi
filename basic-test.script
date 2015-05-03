@@ -3,14 +3,17 @@ route set loop = {
 	waypoint flyto 37.873777 -122.320607 32.99;
 	waypoint flyto 37.873938 -122.319556 32.22;
 	waypoint flyto 37.873532 -122.318762 27.32;
-	waypoint loiter 42.98;
+	waypoint loiter 5.98;
 	waypoint flyto 37.872922 -122.318397 35.11;
 	waypoint flyto 37.872499 -122.320082 40.11;
-	waypoint loiter 42.98;
+	waypoint loiter 3.98;
 	waypoint flyto 37.873125 -122.320564 32.22;
 	waypoint land;
 }
 
 exec route loop;
 
-route remove loop;
+sleep 300;
+
+exit;
+
