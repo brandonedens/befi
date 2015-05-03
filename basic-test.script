@@ -1,4 +1,4 @@
-route set home = {
+route set loop = {
 	waypoint takeoff;
 	waypoint flyto 37.873777 -122.320607 32.99;
 	waypoint flyto 37.873938 -122.319556 32.22;
@@ -11,6 +11,6 @@ route set home = {
 	waypoint land;
 }
 
-exec route home;
+exec route loop;
 
-route remove home;
+route remove loop;
