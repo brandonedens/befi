@@ -16,4 +16,4 @@ arguments : ['@INPUT@', '--defines=@OUTPUT1@', '--output=@OUTPUT0@'])
 
 pfiles = pgen.process('befi.y')
 
-executable('befi', sources : ['main.c', lfiles, pfiles])
+executable('befi', sources : [['drone.c', 'main.c'], lfiles, pfiles])
