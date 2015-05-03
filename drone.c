@@ -90,18 +90,31 @@ struct drone {
  * Local Functions
  */
 
+static struct drone *drone_alloc(void);
+#if 0
+static void drone_free(struct drone *d);
+#endif
+static void drone_init(struct drone *d);
 static void route_add_waypoint_elem(struct route *r, struct waypoint *w);
 static struct route *route_find(struct route const *routes, char const *name);
 
 /******************************************************************************/
+
+/** Allocate memory for a drone. */
+static struct drone *drone_alloc(void)
+{
+	struct drone *d = calloc(1, sizeof(*d));
+	assert(NULL != d);
+	return d;
+}
 
 /** Return a handle to the default drone. */
 struct drone *drone_default(void)
 {
 	static struct drone *d;
 	if (NULL == d) {
-		d = calloc(1, sizeof(*d));
-		assert(NULL != d);
+		d = drone_alloc();
+		drone_init(d);
 	}
 	return d;
 }
@@ -138,6 +151,20 @@ int drone_exec_route(struct drone *d, char const *name)
 	}
 
 	return 0;
+}
+
+#if 0
+/** Free memory associated with a drone. */
+static void drone_free(struct drone *d)
+{
+	free(d);
+}
+#endif
+
+static void drone_init(struct drone *d)
+{
+	// By default our drone has a 3500 mAh battery.
+	d->battery = 3500;
 }
 
 /** Add a route to the drone and set that route as currently selected. */
