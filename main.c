@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "beti.tab.h"
+#include "befi.tab.h"
 
 /*******************************************************************************
  * Constants

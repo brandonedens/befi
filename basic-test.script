@@ -1,10 +1,16 @@
 route set home = {
 	waypoint takeoff;
-	waypoint flyto 123.121 11.99 32.99;
-	waypoint flyto 91.21 11.232 32.22;
-	waypoint loiter 32.98;
-	waypoint flyto 9999.12 11.2121 32.21;
+	waypoint flyto 37.873777 -122.320607 32.99;
+	waypoint flyto 37.873938 -122.319556 32.22;
+	waypoint flyto 37.873532 -122.318762 27.32;
+	waypoint loiter 42.98;
+	waypoint flyto 37.872922 -122.318397 35.11;
+	waypoint flyto 37.872499 -122.320082 40.11;
+	waypoint loiter 42.98;
+	waypoint flyto 37.873125 -122.320564 32.22;
 	waypoint land;
 }
 
 exec route home;
+
+route remove home;

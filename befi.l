@@ -1,4 +1,4 @@
-/* Brandon Edens Tiny Flight Interpreter Syntax definition.
+/* Brandon Edens Flight Interpreter Syntax definition.
  * 2015-04-22
  * Copyright 2015 by Brandon Edens. All Rights Reserved
  */
@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "beti.tab.h"
+#include "befi.tab.h"
 
 extern YYSTYPE yylval;
 
@@ -33,8 +33,8 @@ set                     return TOKEN_SET;
 takeoff                 return TOKEN_TAKEOFF;
 waypoint                return TOKEN_WAYPOINT;
 
-[0-9]+\.[0-9]+          yylval.decimal = strtof(yytext, NULL); return DECIMAL;
-[A-Za-z][A-Za-z0-9_]*   yylval.string = strdup(yytext); return IDENTIFIER;
+-?[0-9]+\.[0-9]+        yylval.decimal = strtof(yytext, NULL); return DECIMAL;
+-?[A-Za-z][A-Za-z0-9_]* yylval.string = strdup(yytext); return IDENTIFIER;
 [0-9]+                  yylval.number = atoi(yytext); return NUMBER;
 
 
