@@ -1,0 +1,161 @@
+Brandon Edens Flight Interpreter
+================================
+:Author: Brandon Edens
+:Email: <brandonedens@gmail.com>
+:Date: 2015-05-03
+:Revision: 1.0
+
+Introduction
+------------
+
+The following software is a toy interpreter that reads sequences of commands
+from either the user or standard input which are then interpreted with their
+results potentially causing a simulated flying vehicle or drone to move around
+in 3D space in a secondary thread of execution.
+
+Compilation
+-----------
+
+This project uses the link:https://github.com/jpakkane/meson[meson build
+system] for compilation. To compile the software you'll need to have flex and
+bison installed on a system that has an implementation of POSIX threads.
+
+To build the project with Meson create a build directory and instruct meson to
+setup the build directory via:
+
+[source,bash]
+----
+$ mkdir build
+$ meson . build
+----
+
+Then run ninja to compile the software.
+
+[source,bash]
+----
+$ ninja -C build
+----
+
+If all goes well you should have an executable in your build directory named
+"befi".
+
+
+Execution
+---------
+
+To execute the software with a test script try:
+
+[source,bash]
+----
+$ ./build/befi < basic-test.script
+----
+
+To try the interpreter interactively execute befi and then insert commands to
+define a route and instruct the drone to fly the route via something akin to:
+
+[source,bash]
+----
+$ ./build/befi
+befi $ route set foo = {
+    waypoint takeoff;
+    waypoint flyto 37.8739 -122.3206 40.0;
+    waypoint land;
+    }
+befi $ exec route foo;
+Flying route: foo
+        Begin taking off.
+        End taking off.
+        Begin flying to waypoint: lat: 37.873901 lon: -122.320602 alt: 40.000000 dist: 37.000000
+        End flying.
+        Begin landing.
+        End landing.
+Route foo completed.
+befi $ route set bar = {
+    waypoint takeoff;
+    waypoint flyto 37.8737 -122.3187 50.0;
+    waypoint land;
+    }
+befi $ exec route bar;
+Flying route: bar
+        Begin taking off.
+        End taking off.
+        Begin flying to waypoint: lat: 37.873699 lon: -122.318703 alt: 50.000000 dist: 168.253451
+        End flying.
+        Begin landing.
+        End landing.
+Route bar completed.
+befi $ exit;
+----
+
+Which will create a new route named foo which will cause the drone to takeoff,
+fly to some coordinates and altitude, and then land the craft. The flight
+itself will occur in a secondary thread of execution allowing you to define
+other routes while the current route foo is executing. Next we define another
+route and execute that route, finally ending the interpreter when the flight
+completes.
+
+Efficiency of the Generated Parser
+----------------------------------
+
+After link:https://github.com/jpakkane/meson/wiki/Cross-compilation[cross
+compiling] the software to target a low powered ARM device such as a Cortex-M
+part (popular with multi-rotor copters) we can analyze the generated object
+files footnote:[Note that Meson release builds compile with -O1 rather than -Os
+and do not employ -flite by default].
+
+Using the size command to print out information about the resulting object file
+we see:
+
+[source,bash]
+----
+$ arm-none-eabi-size arm-build/befi.dir/befi.l.yy.c.o 
+   text    data     bss     dec     hex filename
+   9436       4      56    9496    2518 arm-build/befi.dir/befi.l.yy.c.o
+----
+
+Which indicates to us that Meson building a "Release" build which utilizes GCC
+compiling the software at optimization level -O1 produces an object file that
+utilized 9436 bytes in the .text section.
+
+Looking at the symbol table we see:
+
+[source,bash]
+----
+ $ arm-none-eabi-size arm-build/befi.dir/befi.tab.c.o 
+   text    data     bss     dec     hex filename
+   1824       0       0    1824     720 arm-build/befi.dir/befi.tab.c.o
+----
+
+or 1824 bytes in the .text section.
+
+Further Improvements
+--------------------
+
+The software needs more command functionality.
+
+The current strategy of simulating the flight consists largely of sleeping the
+simulation thread for some period of time and then waking and updating the
+position is less than ideal if we'd like to add a command for printing the
+current position of the drone while in flight. This could be rectified by
+placing a smaller sleep window and updating the position of the drone in
+mid-flight.
+
+Locking needs to be introduced to ensure that positional information is
+consistent between potential interpreter commands that display positional
+information along with the systems that update the drone's position.
+
+Computing and decrementing battery charge needs to be added.
+
+Determination if a flight is possible given the current battery charge should
+be added.
+
+License
+-------
+
+This software is licensed GNU General Public License v3. You can read the
+license in its entirety at: https://www.gnu.org/licenses/gpl.html
+
+This README file is licensed under the GNU Free Documentation License. You can
+read the license in its entirety at:
+https://www.gnu.org/licenses/fdl.html
+
